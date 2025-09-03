@@ -1,0 +1,41 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f5f7fa;
+  color: #333;
+}
+
+h1, h2 {
+  color: #222;
+}
+
+#status {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.job-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.job-card h3 {
+  margin: 0 0 10px;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}

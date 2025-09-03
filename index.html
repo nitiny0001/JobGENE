@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>JobGene - Resume Matcher</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 20px;
+      background: linear-gradient(135deg, #f9f9f9, #e8f0ff);
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #3b5998;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #444;
+      border-left: 5px solid #3b5998;
+      padding-left: 8px;
+      margin-top: 30px;
+    }
+
+    input[type="file"] {
+      padding: 6px;
+      border: 2px solid #3b5998;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 8px 14px;
+      background: #8a214d;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #010000;
+    }
+
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    pre {
+      background: #222;
+      color: #eee;
+      padding: 12px;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow: auto;
+      font-size: 14px;
+    }
+
+    .job-card {
+      border: none;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 12px;
+      width: 350px;
+      background: #3b5998;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+    .job-card:hover {
+      transform: scale(1.03);
+    }
+    .job-card h3 {
+      margin: 0 0 8px 0;
+    }
+
+    #jobs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 JobGene - Resume Matcher</h1>
+
+  <div style="text-align:center;">
+    <input type="file" id="resumeUpload" accept=".txt" />
+    <button id="uploadBtn">Upload Resume</button>
+    <p id="status"></p>
+  </div>
+
+  <h2>Parsed Resume</h2>
+  <pre id="parsed">No parsed data yet.</pre>
+
+  <h2>Jobs</h2>
+  <div id="jobs"></div>
+
+  <script>
+    const jobs = [
+  { title: "Data Analyst", skills: ["Python","SQL","Excel"] },
+  { title: "Web Developer", skills: ["HTML","CSS","JavaScript"] },
+  { title: "ML Engineer", skills: ["Python","Machine Learning"] },
+  { title: "Backend Developer", skills: ["Node.js","Express","MongoDB"] },
+  { title: "Frontend Developer", skills: ["React","JavaScript","CSS"] },
+  { title: "Cybersecurity Analyst", skills: ["Networking","Linux","Security Tools"] },
+  { title: "Cloud Engineer", skills: ["AWS","Docker","Kubernetes"] },
+  { title: "DevOps Engineer", skills: ["CI/CD","Docker","Linux"] },
+  { title: "Mobile App Developer", skills: ["Flutter","Dart","Firebase"] },
+  { title: "Business Analyst", skills: ["SQL","Excel","Power BI"] },
+  { title: "AI Researcher", skills: ["Python","Deep Learning","TensorFlow"] },
+  { title: "UI/UX Designer", skills: ["Figma","Wireframing","Prototyping"] },
+  { title: "Database Administrator", skills: ["SQL","Oracle","Backup & Recovery"] },
+  { title: "Systems Engineer", skills: ["Linux","Shell Scripting","Networking"] },
+  { title: "Software Tester", skills: ["Manual Testing","Selenium","JUnit"] }
+
+    ];
+    let userSkills = [];
+
+    document.getElementById('uploadBtn').addEventListener('click', upload);
+    window.addEventListener('load', () => showJobs());
+
+    async function upload(){
+      const file = document.getElementById('resumeUpload').files[0];
+      if(!file){ alert('Choose sample-resume.txt'); return; }
+
+      document.getElementById('status').textContent = 'Uploading...';
+      const fd = new FormData();
+      fd.append('resume', file);
+
+      const url = 'http://127.0.0.1:5000/parse';
+
+      try {
+        const res = await fetch(url, { method: 'POST', body: fd });
+        const text = await res.text();
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch(err) {
+          document.getElementById('status').textContent = 'Server returned non-JSON. Debug in console.';
+          console.error(text);
+          return;
+        }
+
+        userSkills = (data.skills || []).map(s => s.toLowerCase());
+        document.getElementById('parsed').textContent = JSON.stringify(data, null, 2);
+        document.getElementById('status').textContent = 'Parsed: ' + ((data.skills || []).join(', ') || 'No skills');
+        showJobs();
+      } catch(err) {
+        document.getElementById('status').textContent = 'Network error: ' + err.message;
+      }
+    }
+
+    function showJobs(){
+      const container = document.getElementById('jobs');
+      container.innerHTML = '';
+      jobs.forEach(job => {
+        const matched = job.skills.filter(s => userSkills.includes(s.toLowerCase())).length;
+        const percent = Math.round((matched / job.skills.length) * 100) || 0;
+        const div = document.createElement('div');
+        div.className = 'job-card';
+        div.innerHTML = `<h3>${job.title}</h3>
+                         <p><b>Required:</b> ${job.skills.join(', ')}</p>
+                         <p><b>Match:</b> ${percent}%</p>`;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
