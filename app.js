@@ -9,7 +9,7 @@ let userSkills = [];
 // 👉 Auto-detect backend: use localhost when testing, Render URL when deployed
 const backendURL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://127.0.0.1:5000/parse"
-  : "https://jobgene-backend.onrender.com/parse";
+  : "https://jobgene-1.onrender.com/parse";
 
 document.getElementById('uploadBtn').addEventListener('click', upload);
 window.addEventListener('load', () => showJobs());
@@ -75,3 +75,4 @@ function showJobs() {
     container.appendChild(card);
   });
 }
+
