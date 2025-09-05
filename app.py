@@ -40,7 +40,9 @@ def parse():
         "flutter", "firebase", "cloud", "rest api", "graphql", 
     ]
 
-    found = [s.title() for s in skills_list if s in text.lower()]
+    found = [s.title() for s in skills_list if len(s) >1 and s in text.lower()]
+    #found = [s.title() for s in skills_list if len(s) > 1 and s in text.lower()]
+
     app.logger.info("Parsed resume, skills found: %s", found)
 
     return jsonify({"skills": found})
@@ -48,6 +50,7 @@ def parse():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
