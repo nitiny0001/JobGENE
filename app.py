@@ -31,7 +31,7 @@ def parse():
 
     # tiny keyword-based extractor
     skills_list = [
-        "python", "java", "c", "c++", "javascript", "html", "css", "dart",
+        "python", "java", "c++", "javascript", "html", "css", "dart",
         "sql", "excel", "tableau", "power bi", "pandas", "numpy",
         "node.js", "nodejs", "express", "mongodb", "flask", "django", "react",
         "aws", "azure", "docker", "kubernetes", "ci/cd", "linux",
@@ -48,5 +48,6 @@ def parse():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
